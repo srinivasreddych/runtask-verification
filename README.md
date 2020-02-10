@@ -1,7 +1,7 @@
 # runtask-verification
 This is to verify if the RunTask calls have succeeded and alert accordingly. The solution has SAM template to create CW rule, lambda function, IAM resources.
 
-##Commands to run:
+## Commands to run:
 aws cloudformation package --region us-east-1 --template-file runtask-verification.yaml \
 --s3-bucket <<s3_bucket>> \
 --output-template-file runtask-verification-transformed.yaml
