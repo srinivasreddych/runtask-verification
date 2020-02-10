@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: 'AWS::Serverless-2016-10-31'
+Description: |
+
+  This template causes a CW event rule based invocation to Lambda.
+Parameters:
+  NameOfSolution:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+Resources:
+  LambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Description: |-
+
+        Runs on every invocation of RunTask API call to check if it was
+        successful or not
+      FunctionName: !Sub '${NameOfSolution}'
+      Handler: lambda_function.verify_runtask
+      MemorySize: 256
+      Role: !GetAtt 
+        - LambdaExecutionRole
+        - Arn
+      Runtime: python3.7
+      Timeout: 300
+      CodeUri: ./verify-runtask
+  EventRule:
+    Type: 'AWS::Events::Rule'
+    Properties:
+      Description: EventRule
+      EventPattern:
+        source:
+          - aws.ecs
+        detail-type:
+          - AWS API Call via CloudTrail
+        detail:
+          eventSource:
+            - ecs.amazonaws.com
+          eventName:
+            - RunTask
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt 
+            - LambdaFunction
+            - Arn
+          Id: TargetFunctionV1
+
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+        RoleName: !Sub '${NameOfSolution}-${AWS::Region}'
+        AssumeRolePolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Principal: 
+                    Service: lambda.amazonaws.com
+                Action:
+                  - sts:AssumeRole
+        Path: /
+        Policies:
+        - PolicyName: !Sub '${NameOfSolution}'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'sns:Publish'
+                Resource: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${MySNSTopic.TopicName}
+
+  MySNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: !Sub '${NameOfSolution}'
+  PermissionForEventsToInvokeLambda:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Action: 'lambda:InvokeFunction'
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt 
+        - EventRule
+        - Arn
+
