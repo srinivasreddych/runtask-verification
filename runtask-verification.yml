@@ -8,6 +8,12 @@ Parameters:
     Description: An environment name that will be prefixed to resource names
     Type: String
 Resources:
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Sub: /aws/lambda/${NameOfSolution}
+      RetentionInDays: 30
   LambdaFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
