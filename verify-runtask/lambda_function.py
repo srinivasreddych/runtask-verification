@@ -40,7 +40,3 @@ def send_notification(message):
     TopicArn='arn:aws:sns:us-east-1:560360184571:dynamodb',   
     Message=message
     )
-
-#Todos:
-#1. Create a CFN which creates SNS, CW (wuth RUnTask) targetting lambda --> Serverless function packacing lambda layer
-#2. Plug the SNS into lambda, 
