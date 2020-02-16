@@ -8,9 +8,8 @@ logger.setLevel(logging.INFO)
 
 #Initializing clients
 sns = boto3.client('sns')
-
+sns_topic_arn=os.getenv(sns_topic_arn)
 def verify_runtask(event, context):
-    #sns_arn=os.getenv(sns_arn)
     print (event)
     clusterName=event['detail']['requestParameters']['cluster']
     taskDef=event['detail']['requestParameters']['taskDefinition']
@@ -37,6 +36,6 @@ def verify_runtask(event, context):
         
 def send_notification(message):
     response = sns.publish(
-    TopicArn='arn:aws:sns:us-east-1:560360184571:dynamodb',   
+    TopicArn=sns_topic_arn,
     Message=message
     )
