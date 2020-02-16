@@ -30,8 +30,8 @@ def verify_runtask(event, context):
             print ("Reason for failing is {}".format(arn))
             message="Task failed due to "+reason+" on the ContainerInstanceArn: "+arn+" on the ClusterName: "+clusterName+" launched by TaskDefinition: "+taskDef+" at TimeStamp: "+eventTime
             send_notification(message)
-    except KeyError:
-        print ("KeyError detected")
+    except KeyError as e:
+        print (e)
     
         
 def send_notification(message):
