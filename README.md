@@ -1,6 +1,6 @@
 # runtask-verification
-Summary: This is to verify if the RunTask calls have succeeded or not and alert accordingly. For ECS Service events, we could just read them or create appropriate cloudwatch event rules to get triggered upon failure to launch tasks, whereas for Batch Jobs/ECS Scheduled tasks/native RunTask API calls, there is currently no straightforward way to get notifed if there are any issues (for ex: AGENT, No ContainerInstances found etc. 
-Note: The solution has SAM template to create CW rule, lambda function, IAM resources.
+Summary: This is to verify if the RunTask calls have succeeded or not and alert accordingly. For ECS Service events, we could just read them or create appropriate cloudwatch event rules to get triggered upon failure to launch tasks, whereas for Batch Jobs/ECS Scheduled tasks/native RunTask API calls, there is currently no straightforward way to get notifed if there are any issues (for ex: AGENT, No ContainerInstances found etc. The solution has SAM template to create CW rule, lambda function, IAM resources.
+## Reference: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/api_failures_messages.html
 
 ## Commands to run:
 
